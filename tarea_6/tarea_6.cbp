@@ -35,6 +35,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="estudiantes_escuelas/escuela_estudiante.h" />
+		<Unit filename="estudiantes_escuelas/funciones_estudiantes.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

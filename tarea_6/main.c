@@ -20,7 +20,7 @@ int main()
     /*M, V*/
     totalp_turno = (int*)calloc(2, sizeof(int));
 
-    data_base = leer_archivo("file.txt", totalp_grupo, totalp_turno, &i);
+    data_base = leer_archivo("file.txt", totalp_grupo, totalp_turno, &i, 0);
 
     Imprimirarchivo(data_base);
 
@@ -41,7 +41,6 @@ int main()
 
     /*muestra el numero de estudiantes por grupo*/
     NumeroEstudiantesGrupo(totalp_grupo);
-
     /*muestra el numero de estudiantes por turno*/
     NumeroEstudiantesTurno(totalp_turno);
 
@@ -55,8 +54,10 @@ int main()
     nuevo.E->turno = 'V';
     AltaEstudiante("file.txt", nuevo);
     i++; /*se le suma para saber que hay un elemento mas*/
-
     free(nuevo.E);
+
+    InvertirArchivo("file.txt");
+
     free_data_base(data_base, i);
 
     free(totalp_grupo);

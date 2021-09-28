@@ -260,14 +260,32 @@ void Imprimirarchivo(estudiante *data_base)
 
 }
 
-estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *size)
+estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *size, int invertir)
 {
-  /*Esta funcion sirve para saber cuantos nombres
-  hay, y la cantidad de letras que contiene cada uno
 
-  count: se guardara el numero de nombres que hay en el archivo
-  total_letras: guarda la cantidad total de c_letras
-  */
+    /*Esta funcion sirve para saber cuantos nombres
+    hay, y la cantidad de letras que contiene cada uno
+
+    count: se guardara el numero de nombres que hay en el archivo
+    total_letras: guarda la cantidad total de c_letras
+
+    Parametros
+    ===========
+    char *name:es el nombre del archivo
+    int *totalp_grupo: es un arreglo de enteros que guarda la cantidad de alumnos
+        por grupo
+    int *totalp_turno: es un arreglo de enteros que guarda la cantidad de alumnos
+        por turno
+    int *size: es una variable donde se guarda la cantidad de alumnos, con ella
+        sabemos el estado de la base de datos, es decir el numero de elementos
+    int invertir: es un avariable de control, si toma el valor de 0, puede calcular el total
+        de alumnos por grupos y turno, si es 1 entonces unicamente se usar la funcion para invertir
+        el archivo y no calcula los alumnos por grupos especificos.
+
+    Return
+    =======
+    estudiante *data_base: es la estructura que contiene la info del archivo
+    */
 
     char name_temp[36], calif_temp[3], grupo_t, turno_t;
     char basura;
@@ -304,26 +322,30 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
         fscanf(fp, "%c", &grupo_t);
         (*(data_base + i)).E->grupo = grupo_t;
 
-        switch(grupo_t)
+        if(!invertir)
         {
-        case 'A':
-            *(totalp_grupo) += 1;
-            break;
-        case 'B':
-            *(totalp_grupo + ONE) += 1;
-            break;
-        case 'C':
-            *(totalp_grupo + 2) += 1;
-            break;
-        case 'D':
-            *(totalp_grupo + 3) += 1;
-            break;
-        case 'E':
-            *(totalp_grupo + 4) += 1;
-            break;
-        case 'F':
-            *(totalp_grupo + 5) += 1;
-            break;
+            switch(grupo_t)
+            {
+            case 'A':
+                *(totalp_grupo) += 1;
+                break;
+            case 'B':
+                *(totalp_grupo + ONE) += 1;
+                break;
+            case 'C':
+                *(totalp_grupo + 2) += 1;
+                break;
+            case 'D':
+                *(totalp_grupo + 3) += 1;
+                break;
+            case 'E':
+                *(totalp_grupo + 4) += 1;
+                break;
+            case 'F':
+                *(totalp_grupo + 5) += 1;
+                break;
+        }
+
         }
 
         fscanf(fp, "%c", &basura);
@@ -331,14 +353,19 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
         fscanf(fp, "%c", &turno_t);
         (*(data_base + i)).E->turno = turno_t;
 
-        switch(turno_t)
+        if(!invertir)
         {
-        case 'M':
-            *(totalp_turno) += 1;
-            break;
-        case 'V':
-            *(totalp_turno + ONE) += 1;
-            break;
+
+            switch(turno_t)
+            {
+            case 'M':
+                *(totalp_turno) += 1;
+                break;
+            case 'V':
+                *(totalp_turno + ONE) += 1;
+                break;
+            }
+
         }
 
         i++;
@@ -388,11 +415,36 @@ void AltaEstudiante(char *filename, estudiante new_es)
     fprintf(file, "\n%s,%s,%d,%c,%c",\
     new_es.nombre, new_es.calif_promedio, new_es.edad,\
     new_es.E->grupo, new_es.E->turno);
+    printf("\tSe ha dado de alta un nuevo estudiante\n");
     fclose(file);
 
 }
 
-void InvertirArchivo(estudiante *data_base, )
+void InvertirArchivo(char *name_file)
 {
+    /*funcion que imprime un archivo de manera inversa*/
+
+    estudiante *data_base;
+    int i, j;
+    FILE *file;
+
+    data_base = leer_archivo(name_file, NULL, NULL, &i, ONE);
+    Imprimirarchivo(data_base);
+
+    file = fopen(name_file, "w");
+
+    for(j = i - ONE; j >= ZERO; j--)
+    {
+        fprintf(file, "%s,%s,%d,%c,%c\n",\
+        (*(data_base + j)).nombre,\
+        (*(data_base + j)).calif_promedio,\
+        (*(data_base + j)).edad,\
+        (*(data_base + j)).E->grupo,\
+        (*(data_base + j)).E->turno);
+    }
+
+    free_data_base(data_base, i);
+    fclose(file);
+    printf("\tEl archivo ha sido invertido\n");
 
 }
