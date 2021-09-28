@@ -11,13 +11,7 @@
 #define ZERO 0
 #define ONE 1
 #define TWO 2
-#define SIZE_DB 100
-
-
-int compara_nombre(estudiante, estudiante);
-void merge_(estudiante *, int, int, int, int (*f)(estudiante, estudiante));
-void merge_sort(estudiante *, int, int, int (*f)(estudiante, estudiante));
-void free_data_base(estudiante *, int i);
+#define SIZE_DB 300
 
 void free_data_base(estudiante *data_base, int i)
 {
@@ -37,6 +31,10 @@ void free_data_base(estudiante *data_base, int i)
 
 int compara_edad(estudiante a, estudiante b)
 {
+    /*Funcion que compara la edad de los alumnos,
+    esta pensado para que se ordene de manera ascendente,
+    siendo el primer elemento el mayor*/
+
     if(a.edad > b.edad)
         return ONE;
 
@@ -245,17 +243,24 @@ void Imprimirarchivo(estudiante *data_base)
 
     int i = ZERO;
 
+    printf("\n\t+-----------------------------------+-------------+-------+--------+--------+\n");
+    printf("\t|%-35s|%-13s|%-7s|%-8s|%-8s|\n", "Nombre", "Calificacion", "Edad", "Grupo", "Turno");
+    printf("\t+-----------------------------------+-------------+-------+--------+--------+\n");
+
     while((*(data_base + i)).nombre != NULL && (*(data_base + i)).calif_promedio != NULL)
     {
-        printf("%s %s %d %c %c\n",(*(data_base + i)).nombre,\
+
+        printf("\t|%-35s|%-13s|%-7d|%-8c|%-8c|\n",(*(data_base + i)).nombre,\
         (*(data_base + i)).calif_promedio, (*(data_base + i)).edad,\
         (*(data_base + i)).E->grupo, (*(data_base + i)).E->turno);
         i++;
     }
 
+    printf("\t+-----------------------------------+-------------+-------+--------+--------+\n");
+
 }
 
-struct estudiante *leer_archivo(char *name)
+estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *size)
 {
   /*Esta funcion sirve para saber cuantos nombres
   hay, y la cantidad de letras que contiene cada uno
@@ -268,13 +273,6 @@ struct estudiante *leer_archivo(char *name)
     char basura;
     int edad_t, i;
     estudiante *data_base;
-    int (*f_n)(estudiante, estudiante);
-    int (*f_p)(estudiante, estudiante);
-    int (*f_e)(estudiante, estudiante);
-
-    f_n = &compara_nombre;
-    f_p = &compara_promedio;
-    f_e = &compara_edad;
 
     data_base = (estudiante *)malloc(SIZE_DB * sizeof(estudiante));
     FILE * fp;
@@ -307,12 +305,42 @@ struct estudiante *leer_archivo(char *name)
         fscanf(fp, "%c", &grupo_t);
         (*(data_base + i)).E->grupo = grupo_t;
 
+        switch(grupo_t)
+        {
+        case 'A':
+            *(totalp_grupo) += 1;
+            break;
+        case 'B':
+            *(totalp_grupo + ONE) += 1;
+            break;
+        case 'C':
+            *(totalp_grupo + 2) += 1;
+            break;
+        case 'D':
+            *(totalp_grupo + 3) += 1;
+            break;
+        case 'E':
+            *(totalp_grupo + 4) += 1;
+            break;
+        case 'F':
+            *(totalp_grupo + 5) += 1;
+            break;
+        }
+
         fscanf(fp, "%c", &basura);
 
         fscanf(fp, "%c", &turno_t);
         (*(data_base + i)).E->turno = turno_t;
 
-        /*printf("%s %s %d %c %c", name_temp, calif_temp, edad_t, grupo_t, turno_t);*/
+        switch(turno_t)
+        {
+        case 'M':
+            *(totalp_turno) += 1;
+            break;
+        case 'V':
+            *(totalp_turno + ONE) += 1;
+            break;
+        }
 
         i++;
     }
@@ -321,37 +349,29 @@ struct estudiante *leer_archivo(char *name)
     (*(data_base + i)).nombre = NULL;
     (*(data_base + i)).calif_promedio = NULL;
 
-
-    Imprimirarchivo(data_base);
-
-    merge_sort(data_base, 0, i-1, f_n);
-    printf("\n");
-    Imprimirarchivo(data_base);
-
-    merge_sort(data_base, 0, i-1, f_p);
-    printf("\n");
-    Imprimirarchivo(data_base);
-
-    merge_sort(data_base, 0, i-1, f_e);
-    printf("\n");
-    Imprimirarchivo(data_base);
-
-    free_data_base(data_base, i);
-
-
+    *size = i;
 
     fclose(fp);
 
     return data_base;
 }
 
-int NumeroEstudiantesGrupo()
+void NumeroEstudiantesGrupo(int *vectorn)
 {
+    int i;
+
+    printf("\tNumero de estudiantes por grupo\n");
+
+    for(i = ZERO; i < 6; i++)
+        printf("\t%c: %d\n", 'A' + i, *(vectorn + i));
 
 }
-int NumeroEstudiantesTurno()
-{
 
+void NumeroEstudiantesTurno(int *vectorn)
+{
+    printf("\tNumero de estudiantes por turno\n");
+    printf("\tM: %d\n", *vectorn);
+    printf("\tV: %d\n", *(vectorn + ONE));
 }
 
 void BajaEstudiante()
