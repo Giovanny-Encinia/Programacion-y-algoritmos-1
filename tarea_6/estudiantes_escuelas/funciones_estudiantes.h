@@ -1,5 +1,6 @@
 #ifndef FUNCIONESESTUDIANTES_
 #define FUNCIONESESTUDIANTES_
+void AltaEstudiante(char *filename, estudiante new_es);
 void NumeroEstudiantesGrupo(int *vectorn);
 void NumeroEstudiantesTurno(int *vectorn);
 estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *size);

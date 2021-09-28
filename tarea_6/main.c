@@ -6,6 +6,7 @@
 int main()
 {
     estudiante *data_base;
+    estudiante nuevo;
     int *totalp_grupo, *totalp_turno, i;
     int (*f_n)(estudiante, estudiante);
     int (*f_p)(estudiante, estudiante);
@@ -38,14 +39,25 @@ int main()
     printf("\n");
     Imprimirarchivo(data_base);
 
-    free_data_base(data_base, i);
-
     /*muestra el numero de estudiantes por grupo*/
     NumeroEstudiantesGrupo(totalp_grupo);
 
     /*muestra el numero de estudiantes por turno*/
     NumeroEstudiantesTurno(totalp_turno);
 
+
+    /*Dar de alta a un estudiante*/
+    nuevo.nombre = "Ramiro Zepeda";
+    nuevo.calif_promedio = "A+";
+    nuevo.edad = 15;
+    nuevo.E = (escuela *)malloc(sizeof(escuela));
+    nuevo.E->grupo = 'D';
+    nuevo.E->turno = 'V';
+    AltaEstudiante("file.txt", nuevo);
+    i++; /*se le suma para saber que hay un elemento mas*/
+
+    free(nuevo.E);
+    free_data_base(data_base, i);
 
     free(totalp_grupo);
     free(totalp_turno);

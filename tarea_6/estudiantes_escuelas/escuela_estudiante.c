@@ -280,10 +280,9 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
     fp = fopen (name, "r");
 
     i = ZERO;
+
     while(fscanf(fp, " %[^,]", name_temp) != EOF)
     {
-
-        fscanf(fp, " %[^,]", name_temp);
         (*(data_base + i)).nombre = (char *)malloc(36 * sizeof(char));
         strcpy((*(data_base + i)).nombre, name_temp);
 
@@ -379,12 +378,21 @@ void BajaEstudiante()
 
 }
 
-void AltaEstudiante()
+void AltaEstudiante(char *filename, estudiante new_es)
 {
+    /*Funcion que agrega un nuevo estudiante al archivo, si no
+    existe el archivo, entonces lo crea*/
+
+    FILE *file = fopen(filename, "a");
+
+    fprintf(file, "\n%s,%s,%d,%c,%c",\
+    new_es.nombre, new_es.calif_promedio, new_es.edad,\
+    new_es.E->grupo, new_es.E->turno);
+    fclose(file);
 
 }
 
-void InvertirArchivo()
+void InvertirArchivo(estudiante *data_base, )
 {
 
 }
