@@ -3,6 +3,8 @@
 
 int main()
 {
-    printf("Hello world!\n");
-    return 0;
+    leer_archivo("file.txt");
+
+   return(0);
+
 }

@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1632801189 source:c:\users\giova\documents\cimat\semestre 1\programacion_algoritmos\programacion-y-algoritmos-1\tarea_6\estudiantes_escuelas\escuela_estudiante.c
+	<stdio.h>
+	<errno.h>
+	<stdlib.h>
+	"escuela_estudiante.h"
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1632800352 source:c:\users\giova\documents\cimat\semestre 1\programacion_algoritmos\programacion-y-algoritmos-1\tarea_6\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1632794397 c:\users\giova\documents\cimat\semestre 1\programacion_algoritmos\programacion-y-algoritmos-1\tarea_6\estudiantes_escuelas\escuela_estudiante.h
+

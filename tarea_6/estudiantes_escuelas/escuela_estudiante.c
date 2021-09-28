@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
-
+#include "escuela_estudiante.h"
 /*Giovanny Encinia*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,43 +11,59 @@
 #define ZERO 0
 #define ONE 1
 #define TWO 2
+#define SIZE_DB 100
 
-int inicio_nombre(char *);
-int compara_nombre(char *, char *);
-void merge_(char **, int, int, int);
-void merge_sort(char **, int, int);
-char **contar_letras_palabras(int *);
-void free_data_base(char **);
 
-int inicio_nombre(char *nombre)
+int compara_nombre(estudiante, estudiante);
+void merge_(estudiante *, int, int, int, int (*f)(estudiante, estudiante));
+void merge_sort(estudiante *, int, int, int (*f)(estudiante, estudiante));
+void free_data_base(estudiante *, int i);
+
+void free_data_base(estudiante *data_base, int i)
 {
-  int count = ZERO, i =ZERO;
+    int j;
 
-  while (*(nombre+i) != '\0')
-  {
-    if(*(nombre +  i) == 44)
-      count++;
+    for(j = ZERO; j < i; j++)
+    {
 
-    if(count == TWO)
-      break;
+        free((*(data_base + j)).nombre);
 
-    i++;
-  }
+        free((*(data_base + j)).E);
 
-  return i;
+    }
+
+    free(data_base);
 }
 
-int compara_nombre(char *primero, char *segundo)
+int compara_promedio(estudiante a, estudiante b)
+{
+    char *cal1 = a.calif_promedio;
+    char *cal2 = b.calif_promedio;
+
+    /*La calificacion es mayor en la letra*/
+    if(*cal1 < *cal2)
+        return ONE;
+
+    /*si son la misma letra se fija en el signo +*/
+    if(*(cal1 + ONE) == '+')
+        return ONE;
+
+    /*si son iguales y no es signo mas, compara el sin signo que es mayor al negativo*/
+    if(*(cal1 + ONE) == '\0' && *(cal2 + ONE) == '-')
+        return ONE;
+
+    return ZERO;
+}
+
+int compara_nombre(estudiante a, estudiante b)
 {
   /*Compara caracter por caracter
   se basa en el codigo ASCII, el simbolo espacio es
   menor a simbolos del abecedario*/
 
-  int i, j, r = ONE;
-
-  /*busca donde iniccia el nombre*/
-  i =  inicio_nombre(primero);
-  j = inicio_nombre(segundo);
+  int i = ZERO, j = ZERO, r = ONE;
+  char *primero = a.nombre;
+  char *segundo = b.nombre;
 
   while (*(primero + i) != '\0')
   {
@@ -73,46 +89,76 @@ int compara_nombre(char *primero, char *segundo)
   return  r;
 }
 
-void merge_(char **a, int left, int mid, int right)
+void merge_(estudiante *a, int left, int mid, int right, int (*f)(estudiante, estudiante))
 {
     /*Es el paso merge del algoritmo merge sort*/
 
     int l_1, r_1, k, i = ZERO, j = ZERO;
+    char grupo_, turno_;
+    estudiante *L, *R;
+
 
     l_1 = mid - left + ONE;
     r_1 = right - mid;
     /*Arreglos que nos ayudan a almacenar
     divisiones del original*/
-    char **L = (char **)malloc(l_1 * sizeof(char*));
-    char **R = (char **)malloc(r_1 * sizeof(char*));
+    L = (estudiante *)malloc(l_1 * sizeof(estudiante));
+    R = (estudiante *)malloc(r_1 * sizeof(estudiante));
 
     while(i < l_1)
     {
         /*nuestro punto de referencia
         siempre es left, este cambia
         conforme avanza la recursividad*/
-        *(L + i) = *(a + left + i);
+        (*(L + i)).nombre = (*(a + left + i)).nombre;
+        (*(L + i)).calif_promedio = (*(a + left + i)).calif_promedio;
+        (*(L + i)).edad = (*(a + left + i)).edad;
+        (*(L + i)).E = (escuela *)malloc(sizeof(escuela));
+        (*(L + i)).E->grupo = (*(a + left + i)).E->grupo;
+        (*(L + i)).E->turno = (*(a + left + i)).E->turno;
         i++;
     }
 
+
     while(j < r_1)
     {
-        *(R + j) = *(a + mid + j + ONE);
+        (*(R + j)).nombre = (*(a + mid + j + ONE)).nombre;
+        (*(R + j)).calif_promedio = (*(a + mid + j + ONE)).calif_promedio;
+        (*(R + j)).edad = (*(a + mid + j + ONE)).edad;
+        (*(R + j)).E = (escuela *)malloc(sizeof(escuela));
+        (*(R + j)).E->grupo = (*(a + mid + j + ONE)).E->grupo;
+        (*(R + j)).E->turno = (*(a + mid + j + ONE)).E->turno;
         j++;
     }
 
     i = j = ZERO;
     k = left;
 
+    /*esta es la parte que compara los tamanios
+    esta cambia dependiendo de la funcion que se le de*/
     while(i < l_1 && j < r_1)
     {
-        if(compara_nombre(*(L + i), *(R + j)))
+        if(f((*(L + i)), (*(R + j))))
         {
-            *(a + k) = *(L + i++);
+            (*(a + k)).nombre = (*(L + i)).nombre;
+            (*(a + k)).calif_promedio = (*(L + i)).calif_promedio;
+            (*(a + k)).edad = (*(L + i)).edad;
+            grupo_ = (*(L + i)).E->grupo;
+            (*(a + k)).E->grupo = grupo_;
+            turno_ = (*(L + i)).E->turno;
+            (*(a + k)).E->turno = turno_;
+            i++;
         }
         else
         {
-            *(a + k) = *(R + j++);
+            (*(a + k)).nombre = (*(R + j)).nombre;
+            (*(a + k)).calif_promedio = (*(R + j)).calif_promedio;
+            (*(a + k)).edad = (*(R + j)).edad;
+            grupo_ = (*(R + j)).E->grupo;
+            (*(a + k)).E->grupo = grupo_;
+            turno_ = (*(R + j)).E->turno;
+            (*(a + k)).E->turno = turno_;
+            j++;
         }
 
         k++;
@@ -123,22 +169,39 @@ void merge_(char **a, int left, int mid, int right)
     con el sobrente*/
     while(i < l_1)
     {
-        *(a + k) = *(L + i++);
+        (*(a + k)).nombre = (*(L + i)).nombre;
+        (*(a + k)).calif_promedio = (*(L + i)).calif_promedio;
+        (*(a + k)).edad = (*(L + i)).edad;
+        (*(a + k)).E->grupo = (*(L + i)).E->grupo;
+        (*(a + k)).E->turno = (*(L + i)).E->turno;
+        i++;
         k++;
     }
 
     while(j < r_1)
     {
-        *(a + k) = *(R + j++);
+        (*(a + k)).nombre = (*(R + j)).nombre;
+        (*(a + k)).calif_promedio = (*(R + j)).calif_promedio;
+        (*(a + k)).edad = (*(R + j)).edad;
+        (*(a + k)).E->grupo = (*(R + j)).E->grupo;
+        (*(a + k)).E->turno = (*(R + j)).E->turno;
+        j++;
         k++;
     }
+
+    /*libera memoria asignada a la escuela temporal*/
+    for(j = ZERO; j < r_1; j++)
+        free((*(R + j)).E);
+
+    for(j = ZERO; j < l_1; j++)
+        free((*(L + j)).E);
 
     free(L);
     free(R);
 
 }/*end merge*/
 
-void merge_sort(char **a, int left, int right)
+void merge_sort(estudiante *a, int left, int right, int (*f)(estudiante, estudiante))
 {
     /*algoritmo merge sort*/
 
@@ -150,16 +213,39 @@ void merge_sort(char **a, int left, int right)
         mid = left + (right - left) / 2;
 
         /*recurividad a laprimera mitad*/
-        merge_sort(a, left, mid);
+        merge_sort(a, left, mid, f);
+
         /*segunda mitad*/
-        merge_sort(a, mid + ONE, right);
+        merge_sort(a, mid + ONE, right, f);
+
         /*realiza merge a las mitades*/
-        merge_(a, left, mid, right);
+        merge_(a, left, mid, right, f);
     }
 
 }
 
-char **contar_letras_palabras(int *count)
+void Imprimirarchivo(estudiante *data_base)
+{
+    /*Funcion que imprime el estado del archivo
+    Parametros
+    ==========
+    estudiante *data_base: es la estructura donde se guardan los datos del
+    archivo
+    */
+
+    int i = ZERO;
+
+    while((*(data_base + i)).nombre != NULL && (*(data_base + i)).calif_promedio != NULL)
+    {
+        printf("%s %s %d %c %c\n",(*(data_base + i)).nombre,\
+        (*(data_base + i)).calif_promedio, (*(data_base + i)).edad,\
+        (*(data_base + i)).E->grupo, (*(data_base + i)).E->turno);
+        i++;
+    }
+
+}
+
+struct estudiante *leer_archivo(char *name)
 {
   /*Esta funcion sirve para saber cuantos nombres
   hay, y la cantidad de letras que contiene cada uno
@@ -168,48 +254,83 @@ char **contar_letras_palabras(int *count)
   total_letras: guarda la cantidad total de c_letras
   */
 
-  char letra;
-  int i, j;
-  /*en data_base se guardaran todos los nombres*/
-  char **data_base = (char **)malloc(N * sizeof(char*));
+    char name_temp[36], calif_temp[3], grupo_t, turno_t;
+    char basura;
+    int edad_t, i;
+    estudiante *data_base;
+    int (*f_n)(estudiante);
+    int (*f_p)(estudiante);
 
-  /*Crea las particiones de la base de datos, en donde se
-  almacenaran los nombres*/
-  for(i = ZERO; i < N; i++)
-  {
-    *(data_base + i) = (char *)malloc(TAMANIO * sizeof(char));
-  }
+    f_n = &compara_nombre;
+    f_p = &compara_promedio;
 
-  j = i = ZERO;
+    data_base = (estudiante *)malloc(SIZE_DB * sizeof(estudiante));
+    FILE * fp;
 
-  while(scanf("%c", &letra) != EOF)
-  {
-    *(*(data_base + i) + j) = letra;
-    j++;
+    fp = fopen (name, "r");
 
-    /*El 10 corresponde al salto de linea en codigo ASCII*/
-    if(letra == 10)
+    i = ZERO;
+    while(fscanf(fp, " %[^,]", name_temp) != EOF)
     {
-      /*el ultimo caracter es un salto de linea
-      y lo transformamos en caracter especial para que
-      ahora sea un string*/
-      *(*(data_base + i) + j - ONE) = '\0';
-      (*count)++;
-      j = ZERO;
-      i++;
+
+        fscanf(fp, " %[^,]", name_temp);
+        (*(data_base + i)).nombre = (char *)malloc(36 * sizeof(char));
+        strcpy((*(data_base + i)).nombre, name_temp);
+
+        fscanf(fp, " %c", &basura);
+
+        fscanf(fp, " %[^,]", calif_temp);
+        (*(data_base + i)).calif_promedio = (char *)malloc(3 * sizeof(char));
+        strcpy((*(data_base + i)).calif_promedio, calif_temp);
+
+        fscanf(fp, " %c", &basura);
+
+        fscanf(fp, " %d", &edad_t);
+        (*(data_base + i)).edad = edad_t;
+
+        fscanf(fp, " %c", &basura);
+
+        (*(data_base + i)).E = (escuela *)malloc(sizeof(escuela));
+
+        fscanf(fp, "%c", &grupo_t);
+        (*(data_base + i)).E->grupo = grupo_t;
+
+        fscanf(fp, "%c", &basura);
+
+        fscanf(fp, "%c", &turno_t);
+        (*(data_base + i)).E->turno = turno_t;
+
+        /*printf("%s %s %d %c %c", name_temp, calif_temp, edad_t, grupo_t, turno_t);*/
+
+        i++;
     }
 
-  }
+    /*el ultimo elemento apunta a NULL*/
+    (*(data_base + i)).nombre = NULL;
+    (*(data_base + i)).calif_promedio = NULL;
 
-  return data_base;
+
+    Imprimirarchivo(data_base);
+
+    merge_sort(data_base, 0, i-1, f_n);
+printf("\n");
+    Imprimirarchivo(data_base);
+
+    merge_sort(data_base, 0, i-1, f_p);
+    printf("\n");
+Imprimirarchivo(data_base);
+    free_data_base(data_base, i);
+
+
+
+    fclose(fp);
+
+    return data_base;
 }
 
-void free_data_base(char **data_base)
-{
-  free(*(data_base));
-  free(data_base);
-}
 
+
+/*
 int main()
 {
   int i;
@@ -238,25 +359,9 @@ int main()
   free_data_base(data_base);
 
   return ZERO;
-}
+}*/
 
-void Imprimirarchivo()
-{
 
-}
-void OrdenarNombre()
-{
-
-}
-void OrdenarEdad()
-{
-
-}
-
-void OrdenarPromedio()
-{
-
-}
 int NumeroEstudiantesGrupo()
 {
 
