@@ -40,16 +40,17 @@ int compara_promedio(estudiante a, estudiante b)
     char *cal1 = a.calif_promedio;
     char *cal2 = b.calif_promedio;
 
+    printf("%s, %s\n", cal1, cal2);
     /*La calificacion es mayor en la letra*/
     if(*cal1 < *cal2)
         return ONE;
 
     /*si son la misma letra se fija en el signo +*/
-    if(*(cal1 + ONE) == '+')
+    if(*(cal1 + ONE) == '+' && *cal1 <= *cal2)
         return ONE;
 
     /*si son iguales y no es signo mas, compara el sin signo que es mayor al negativo*/
-    if(*(cal1 + ONE) == '\0' && *(cal2 + ONE) == '-')
+    if(*(cal1 + ONE) == '\0' && *(cal2 + ONE) == '-' && *cal1 <= *cal2)
         return ONE;
 
     return ZERO;
