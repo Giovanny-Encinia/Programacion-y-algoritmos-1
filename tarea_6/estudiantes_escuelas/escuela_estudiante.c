@@ -35,12 +35,21 @@ void free_data_base(estudiante *data_base, int i)
     free(data_base);
 }
 
+int compara_edad(estudiante a, estudiante b)
+{
+    if(a.edad > b.edad)
+        return ONE;
+
+    return ZERO;
+
+}
+
 int compara_promedio(estudiante a, estudiante b)
 {
+    /*funcion para comparar el promedio*/
     char *cal1 = a.calif_promedio;
     char *cal2 = b.calif_promedio;
 
-    printf("%s, %s\n", cal1, cal2);
     /*La calificacion es mayor en la letra*/
     if(*cal1 < *cal2)
         return ONE;
@@ -259,11 +268,13 @@ struct estudiante *leer_archivo(char *name)
     char basura;
     int edad_t, i;
     estudiante *data_base;
-    int (*f_n)(estudiante);
-    int (*f_p)(estudiante);
+    int (*f_n)(estudiante, estudiante);
+    int (*f_p)(estudiante, estudiante);
+    int (*f_e)(estudiante, estudiante);
 
     f_n = &compara_nombre;
     f_p = &compara_promedio;
+    f_e = &compara_edad;
 
     data_base = (estudiante *)malloc(SIZE_DB * sizeof(estudiante));
     FILE * fp;
@@ -314,12 +325,17 @@ struct estudiante *leer_archivo(char *name)
     Imprimirarchivo(data_base);
 
     merge_sort(data_base, 0, i-1, f_n);
-printf("\n");
+    printf("\n");
     Imprimirarchivo(data_base);
 
     merge_sort(data_base, 0, i-1, f_p);
     printf("\n");
-Imprimirarchivo(data_base);
+    Imprimirarchivo(data_base);
+
+    merge_sort(data_base, 0, i-1, f_e);
+    printf("\n");
+    Imprimirarchivo(data_base);
+
     free_data_base(data_base, i);
 
 
@@ -328,40 +344,6 @@ Imprimirarchivo(data_base);
 
     return data_base;
 }
-
-
-
-/*
-int main()
-{
-  int i;
-  int *number_letra, count = ZERO, total_letras = ZERO;
-  char **data_base;
-
-  data_base = contar_letras_palabras(&count);
-  printf("%s\n", "La lista original es:");
-  printf("==========================================\n");
-
-  for(i=ZERO; i < count; i++)
-  {
-    printf("%s\n", data_base[i]);
-  }
-
-  printf("\n\n");
-  merge_sort(data_base, ZERO, count - ONE);
-  printf("%s\n", "La lista ordenada por nombre es");
-  printf("==========================================\n");
-
-  for(i=ZERO; i < count; i++)
-  {
-    printf("%s\n", data_base[i]);
-  }
-
-  free_data_base(data_base);
-
-  return ZERO;
-}*/
-
 
 int NumeroEstudiantesGrupo()
 {
