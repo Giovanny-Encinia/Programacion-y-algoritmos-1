@@ -398,8 +398,21 @@ void NumeroEstudiantesTurno(int *vectorn)
     printf("\tV: %d\n", *(vectorn + ONE));
 }
 
-void BajaEstudiante()
+void BajaEstudiante(char *filename, estudiante baja_es)
 {
+    int totalp_grupo[6] = {0, 0, 0, 0, 0, 0}, totalp_turno[2] = {0, 0};
+    FILE *file = fopen(filename, "r");
+    FILE *f_temp = fopen("temp_baja.txt", "w");
+    estudiante *data_base;
+    int (*f_n)(estudiante, estudiante), i;
+
+    f_n = &compara_nombre;
+    data_base = leer_archivo(filename, totalp_grupo, totalp_turno, &i, 0);
+    merge_sort(data_base, 0, i-1, f_n);
+
+    /*Debo de aplicar busqueda binaria, comparando los nombre*/
+    free_data_base(data_base, i);
+
 
 }
 
@@ -546,13 +559,10 @@ void volteaArchivo(char *name)
                 k = ZERO;
 
                 break;
-
             }
 
             k++;
-
         }
-
 
     }
 

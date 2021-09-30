@@ -12,4 +12,6 @@ void merge_(estudiante *, int, int, int, int (*f)(estudiante, estudiante));
 void merge_sort(estudiante *, int, int, int (*f)(estudiante, estudiante));
 void free_data_base(estudiante *, int i);
 void InvertirArchivo(char *name_file);
+void volteaArchivo(char *name);
+void BajaEstudiante(char *filename, estudiante baja_es);
 #endif /* FUNCIONESESTUDIANTES_*/

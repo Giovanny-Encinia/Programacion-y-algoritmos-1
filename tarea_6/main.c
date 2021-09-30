@@ -6,7 +6,7 @@
 int main()
 {
     estudiante *data_base;
-    estudiante nuevo;
+    estudiante nuevo, baja;
     int *totalp_grupo, *totalp_turno, i;
     int (*f_n)(estudiante, estudiante);
     int (*f_p)(estudiante, estudiante);
@@ -64,6 +64,18 @@ int main()
     free(totalp_turno);
 
     volteaArchivo("file.txt");
+    printf("El archivo a sido invertido\n");
+
+    /*Baja de un estudiante*/
+    /*Dar de alta a un estudiante*/
+    baja.nombre = "Ramiro Zepeda";
+    baja.calif_promedio = "A+";
+    baja.edad = 15;
+    baja.E = (escuela *)malloc(sizeof(escuela));
+    baja.E->grupo = 'D';
+    baja.E->turno = 'V';
+    BajaEstudiante("file.txt", baja);
+    free(baja.E);
 
     return(0);
 
