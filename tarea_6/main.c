@@ -52,16 +52,18 @@ int main()
     nuevo.E = (escuela *)malloc(sizeof(escuela));
     nuevo.E->grupo = 'D';
     nuevo.E->turno = 'V';
-    AltaEstudiante("file.txt", nuevo);
+    /*AltaEstudiante("file.txt", nuevo);*/
     i++; /*se le suma para saber que hay un elemento mas*/
     free(nuevo.E);
 
-    InvertirArchivo("file.txt");
+    /*InvertirArchivo("file.txt");*/
 
     free_data_base(data_base, i);
 
     free(totalp_grupo);
     free(totalp_turno);
+
+    volteaArchivo("file.txt");
 
     return(0);
 

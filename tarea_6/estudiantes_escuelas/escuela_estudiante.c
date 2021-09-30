@@ -19,11 +19,9 @@ void free_data_base(estudiante *data_base, int i)
 
     for(j = ZERO; j < i; j++)
     {
-
         free((*(data_base + j)).nombre);
 
         free((*(data_base + j)).E);
-
     }
 
     free(data_base);
@@ -422,20 +420,21 @@ void AltaEstudiante(char *filename, estudiante new_es)
 
 void InvertirArchivo(char *name_file)
 {
-    /*funcion que imprime un archivo de manera inversa*/
+    /*funcion que imprime un archivo de manera inversa,
+    Es una funcion que es rapida pero necesita de mucha memoria*/
 
     estudiante *data_base;
     int i, j;
     FILE *file;
 
     data_base = leer_archivo(name_file, NULL, NULL, &i, ONE);
-    Imprimirarchivo(data_base);
-
     file = fopen(name_file, "w");
+
 
     for(j = i - ONE; j >= ZERO; j--)
     {
         fprintf(file, "%s,%s,%d,%c,%c\n",\
+
         (*(data_base + j)).nombre,\
         (*(data_base + j)).calif_promedio,\
         (*(data_base + j)).edad,\
@@ -446,5 +445,111 @@ void InvertirArchivo(char *name_file)
     free_data_base(data_base, i);
     fclose(file);
     printf("\tEl archivo ha sido invertido\n");
+
+}
+
+void volteaArchivo(char *name)
+{
+
+    char name_temp[36], calif_temp[3], grupo_t, turno_t;
+    char basura, file_name_temp[] = "temporal_t.txt";
+    int edad_t, i, j, k = ZERO, tamanio, l = ZERO;
+    estudiante estudiante_i;
+    FILE *f_temp;
+    FILE *fp;
+
+    fp = fopen (name, "r");
+    f_temp = fopen(file_name_temp, "w");
+
+    i = ZERO;
+
+
+    estudiante_i.nombre = (char *)malloc(36 * sizeof(char));
+
+    (estudiante_i).calif_promedio = (char *)malloc(3 * sizeof(char));
+
+    (estudiante_i).E = (escuela *)malloc(sizeof(escuela));
+
+
+    /*cuenta el numero de lineas que hay en el archivo*/
+    while(fscanf(fp, " %[^\n]", name_temp) != EOF)
+    {
+        i++;
+    }
+
+    /*iniciara con el numero de \n - uno, para que imprima de reversa*/
+    for(j = i-ONE; j >= ZERO; j--)
+    {
+        /*cada vez que encuentre la fila ultima dara rewind() y contara de nuevo*/
+        rewind(fp);
+
+        while(fscanf(fp, " %[^\n]", name_temp) != EOF)
+        {
+            /*si el numero de \n corresponde con el siguiente entonces
+            lee, crea la estructura e imprimme*/
+            if(k == j)
+            {
+                tamanio = ZERO;
+                l = ZERO;
+
+                /*ya que leimos toda la linea es necesario contar la cantidad
+                de caracteres que hay en la linea*/
+                while(name_temp[l] != '\0')
+                {
+                    tamanio++;
+                    l++;
+                }
+
+                /*regresa al inicio del renglon*/
+                fseek(fp, -tamanio, SEEK_CUR);
+
+
+                /*lee e imprime el nombre*/
+                fscanf(fp, " %[^\,]", name_temp);
+                strcpy(estudiante_i.nombre, name_temp);
+                printf("%s,", estudiante_i.nombre);
+                /*salta la coma*/
+                fscanf(fp, " %c", &basura);
+                /*lee e imprime la calificacion*/
+                fscanf(fp, " %[^,]", calif_temp);
+                strcpy(estudiante_i.calif_promedio, calif_temp);
+                printf("%s,", estudiante_i.calif_promedio);
+                /*salta la coma*/
+                fscanf(fp, " %c", &basura);
+
+                fscanf(fp, " %d", &edad_t);
+                estudiante_i.edad = edad_t;
+                printf("%d,", estudiante_i.edad);
+                /*salta la coma*/
+                fscanf(fp, " %c", &basura);
+
+                fscanf(fp, "%c", &grupo_t);
+                estudiante_i.E->grupo = grupo_t;
+                printf("%c,", estudiante_i.E->grupo);
+                /*salta la coma*/
+                fscanf(fp, "%c", &basura);
+
+                fscanf(fp, "%c", &turno_t);
+                estudiante_i.E->turno = turno_t;
+                printf("%c\n", estudiante_i.E->turno);
+                k = ZERO;
+
+                break;
+
+            }
+
+            k++;
+
+        }
+
+
+    }
+
+    free( estudiante_i.nombre);
+    free( estudiante_i.calif_promedio);
+    free(estudiante_i.E);
+
+    fclose(f_temp);
+    fclose(fp);
 
 }
