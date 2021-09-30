@@ -451,6 +451,17 @@ void InvertirArchivo(char *name_file)
 void volteaArchivo(char *name)
 {
 
+    /*Funcion que invierte el contenido de un archivo, este lee linea por linea
+    hasta llegar a la ultima, penultima... fila e imprime en un nuevo archivo,
+    al final destruye el archivo original y crea uno nuevo modificado con el mismo
+    nombre. Este algoritmo es eficiente en el uso de memoria, ya que solo necesita
+    la cantidad necesaria para almacenar una estructura de estudiante y una estructura
+    de escuela
+
+    Parametros
+    ==========
+    char *name: es el nombre del archivo original*/
+
     char name_temp[36], calif_temp[3], grupo_t, turno_t;
     char basura, file_name_temp[] = "temporal_t.txt";
     int edad_t, i, j, k = ZERO, tamanio, l = ZERO;
@@ -463,7 +474,7 @@ void volteaArchivo(char *name)
 
     i = ZERO;
 
-
+    /*la estructura dinammica son necesarias por motivos de la tarea*/
     estudiante_i.nombre = (char *)malloc(36 * sizeof(char));
 
     (estudiante_i).calif_promedio = (char *)malloc(3 * sizeof(char));
@@ -507,31 +518,31 @@ void volteaArchivo(char *name)
                 /*lee e imprime el nombre*/
                 fscanf(fp, " %[^\,]", name_temp);
                 strcpy(estudiante_i.nombre, name_temp);
-                printf("%s,", estudiante_i.nombre);
+                fprintf(f_temp, "%s,", estudiante_i.nombre);
                 /*salta la coma*/
                 fscanf(fp, " %c", &basura);
                 /*lee e imprime la calificacion*/
                 fscanf(fp, " %[^,]", calif_temp);
                 strcpy(estudiante_i.calif_promedio, calif_temp);
-                printf("%s,", estudiante_i.calif_promedio);
+                fprintf(f_temp, "%s,", estudiante_i.calif_promedio);
                 /*salta la coma*/
                 fscanf(fp, " %c", &basura);
 
                 fscanf(fp, " %d", &edad_t);
                 estudiante_i.edad = edad_t;
-                printf("%d,", estudiante_i.edad);
+                fprintf(f_temp, "%d,", estudiante_i.edad);
                 /*salta la coma*/
                 fscanf(fp, " %c", &basura);
 
                 fscanf(fp, "%c", &grupo_t);
                 estudiante_i.E->grupo = grupo_t;
-                printf("%c,", estudiante_i.E->grupo);
+                fprintf(f_temp, "%c,", estudiante_i.E->grupo);
                 /*salta la coma*/
                 fscanf(fp, "%c", &basura);
 
                 fscanf(fp, "%c", &turno_t);
                 estudiante_i.E->turno = turno_t;
-                printf("%c\n", estudiante_i.E->turno);
+                fprintf(f_temp, "%c\n", estudiante_i.E->turno);
                 k = ZERO;
 
                 break;
@@ -551,5 +562,13 @@ void volteaArchivo(char *name)
 
     fclose(f_temp);
     fclose(fp);
+
+    remove(name);
+
+   if(rename(file_name_temp, name)) {
+      printf("File renamed successfully");
+   } else {
+      printf("Error: unable to rename the file");
+   }
 
 }
