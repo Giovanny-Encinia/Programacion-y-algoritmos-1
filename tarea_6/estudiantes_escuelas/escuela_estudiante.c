@@ -2,6 +2,7 @@
 #include <errno.h>
 #include <stdlib.h>
 #include "escuela_estudiante.h"
+#include <errno.h>
 /*Giovanny Encinia*/
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +12,7 @@
 #define ZERO 0
 #define ONE 1
 #define TWO 2
-#define SIZE_DB 300
+#define SIZE_DB 30
 
 void free_data_base(estudiante *data_base, int i)
 {
@@ -110,6 +111,9 @@ void merge_(estudiante *a, int left, int mid, int right, int (*f)(estudiante, es
     divisiones del original*/
     L = (estudiante *)malloc(l_1 * sizeof(estudiante));
     R = (estudiante *)malloc(r_1 * sizeof(estudiante));
+
+    if(L == NULL && R == NULL)
+        printf("No se puede asignar memoria para ordenar: %s\n", strerror(errno));
 
     while(i < l_1)
     {
@@ -295,17 +299,28 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
 
     fp = fopen (name, "r");
 
+    if(fp == NULL)
+        printf("No se pudo abrir el archivo\nError: %s\n", strerror(errno));
+
     i = ZERO;
 
     while(fscanf(fp, " %[^,]", name_temp) != EOF)
     {
         (*(data_base + i)).nombre = (char *)malloc(36 * sizeof(char));
+
+        if((*(data_base + i)).nombre == NULL)
+            printf("No se puede asignar memoria a nombre: %s\n", strerror(errno));
+
         strcpy((*(data_base + i)).nombre, name_temp);
 
         fscanf(fp, " %c", &basura);
 
         fscanf(fp, " %[^,]", calif_temp);
         (*(data_base + i)).calif_promedio = (char *)malloc(3 * sizeof(char));
+
+        if((*(data_base + i)).calif_promedio == NULL)
+            printf("No se puede asignar memoria calificacion: %s\n", strerror(errno));
+
         strcpy((*(data_base + i)).calif_promedio, calif_temp);
 
         fscanf(fp, " %c", &basura);
@@ -316,6 +331,9 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
         fscanf(fp, " %c", &basura);
 
         (*(data_base + i)).E = (escuela *)malloc(sizeof(escuela));
+
+        if((*(data_base + i)).E == NULL)
+            printf("No se puede asignar memoria a Escuela: %s\n", strerror(errno));
 
         fscanf(fp, "%c", &grupo_t);
         (*(data_base + i)).E->grupo = grupo_t;
@@ -342,7 +360,7 @@ estudiante *leer_archivo(char *name, int *totalp_grupo, int *totalp_turno, int *
             case 'F':
                 *(totalp_grupo + 5) += 1;
                 break;
-        }
+            }
 
         }
 
@@ -398,30 +416,17 @@ void NumeroEstudiantesTurno(int *vectorn)
     printf("\tV: %d\n", *(vectorn + ONE));
 }
 
-void BajaEstudiante(char *filename, estudiante baja_es)
-{
-    int totalp_grupo[6] = {0, 0, 0, 0, 0, 0}, totalp_turno[2] = {0, 0};
-    FILE *file = fopen(filename, "r");
-    FILE *f_temp = fopen("temp_baja.txt", "w");
-    estudiante *data_base;
-    int (*f_n)(estudiante, estudiante), i;
-
-    f_n = &compara_nombre;
-    data_base = leer_archivo(filename, totalp_grupo, totalp_turno, &i, 0);
-    merge_sort(data_base, 0, i-1, f_n);
-
-    /*Debo de aplicar busqueda binaria, comparando los nombre*/
-    free_data_base(data_base, i);
 
 
-}
-
-void AltaEstudiante(char *filename, estudiante new_es)
+void AltaEstudiante(char *filename, estudiante new_es, int *i)
 {
     /*Funcion que agrega un nuevo estudiante al archivo, si no
     existe el archivo, entonces lo crea*/
 
     FILE *file = fopen(filename, "a");
+
+    if(file == NULL)
+        printf("\tNo se pudo abrir el archivo\nError: %s\n", strerror(errno));
 
     fprintf(file, "\n%s,%s,%d,%c,%c",\
     new_es.nombre, new_es.calif_promedio, new_es.edad,\
@@ -429,35 +434,7 @@ void AltaEstudiante(char *filename, estudiante new_es)
     printf("\tSe ha dado de alta un nuevo estudiante\n");
     fclose(file);
 
-}
-
-void InvertirArchivo(char *name_file)
-{
-    /*funcion que imprime un archivo de manera inversa,
-    Es una funcion que es rapida pero necesita de mucha memoria*/
-
-    estudiante *data_base;
-    int i, j;
-    FILE *file;
-
-    data_base = leer_archivo(name_file, NULL, NULL, &i, ONE);
-    file = fopen(name_file, "w");
-
-
-    for(j = i - ONE; j >= ZERO; j--)
-    {
-        fprintf(file, "%s,%s,%d,%c,%c\n",\
-
-        (*(data_base + j)).nombre,\
-        (*(data_base + j)).calif_promedio,\
-        (*(data_base + j)).edad,\
-        (*(data_base + j)).E->grupo,\
-        (*(data_base + j)).E->turno);
-    }
-
-    free_data_base(data_base, i);
-    fclose(file);
-    printf("\tEl archivo ha sido invertido\n");
+    (*i)++;
 
 }
 
@@ -489,10 +466,11 @@ void volteaArchivo(char *name)
 
     /*la estructura dinammica son necesarias por motivos de la tarea*/
     estudiante_i.nombre = (char *)malloc(36 * sizeof(char));
-
     (estudiante_i).calif_promedio = (char *)malloc(3 * sizeof(char));
-
     (estudiante_i).E = (escuela *)malloc(sizeof(escuela));
+
+    if(estudiante_i.nombre == NULL || (estudiante_i).E == NULL || (estudiante_i).calif_promedio == NULL)
+        printf("\tNo se puede asignar memoria: %s\n", strerror(errno));
 
 
     /*cuenta el numero de lineas que hay en el archivo*/
@@ -572,13 +550,96 @@ void volteaArchivo(char *name)
 
     fclose(f_temp);
     fclose(fp);
-
     remove(name);
 
-   if(rename(file_name_temp, name)) {
-      printf("File renamed successfully");
-   } else {
-      printf("Error: unable to rename the file");
-   }
+    if(rename(file_name_temp, name))
+        printf("\tArchivo no se pudo invertir\nError: %s\n", strerror(errno));
+    else
+        printf("\tEl archivo se ha invertido\n");
+
+}
+
+void BajaEstudiante(char *file_name, estudiante baja_es, int *tamanio)
+{
+    /*Algoritmo que da de baja un estudiante, busca linea por linea a el estudiente mediante
+    su nombre, e imprime de nuevo en un nuevo archivo*/
+
+    char name_temp[36], calif_temp[3], grupo_t, turno_t, salto[80];
+    char basura, file_name_temp[] = "temporal_baja.txt";
+    int edad_t;
+    estudiante estudiante_i;
+    FILE *f_temp;
+    FILE *file;
+
+    file = fopen (file_name, "r");
+    f_temp = fopen(file_name_temp, "w");
+
+    if(file == NULL || f_temp == NULL)
+        printf("\tNo se puede leer el archivo\nError: %s\n", strerror(errno));
+
+    /*la estructura dinammica son necesarias por motivos de la tarea*/
+    estudiante_i.nombre = (char *)malloc(36 * sizeof(char));
+    (estudiante_i).calif_promedio = (char *)malloc(3 * sizeof(char));
+    (estudiante_i).E = (escuela *)malloc(sizeof(escuela));
+
+    if(estudiante_i.nombre == NULL || (estudiante_i).E == NULL || (estudiante_i).calif_promedio == NULL)
+        printf("\tNo se puede asignar memoria: %s\n", strerror(errno));
+
+        while(fscanf(file, " %[^\,]", name_temp) != EOF)
+        {
+            /*busqueda a traves del nombre*/
+            if(strcmp(name_temp, baja_es.nombre))
+            {
+
+                strcpy(estudiante_i.nombre, name_temp);
+                fprintf(f_temp, "%s,", estudiante_i.nombre);
+                /*salta la coma*/
+                fscanf(file, " %c", &basura);
+                /*lee e imprime la calificacion*/
+                fscanf(file, " %[^,]", calif_temp);
+                strcpy(estudiante_i.calif_promedio, calif_temp);
+                fprintf(f_temp, "%s,", estudiante_i.calif_promedio);
+                /*salta la coma*/
+                fscanf(file, " %c", &basura);
+
+                fscanf(file, " %d", &edad_t);
+                estudiante_i.edad = edad_t;
+                fprintf(f_temp, "%d,", estudiante_i.edad);
+                /*salta la coma*/
+                fscanf(file, " %c", &basura);
+
+                fscanf(file, " %c", &grupo_t);
+                estudiante_i.E->grupo = grupo_t;
+                fprintf(f_temp, "%c,", estudiante_i.E->grupo);
+                /*salta la coma*/
+                fscanf(file, " %c", &basura);
+
+                fscanf(file, " %c", &turno_t);
+                estudiante_i.E->turno = turno_t;
+                fprintf(f_temp, "%c\n", estudiante_i.E->turno);
+            }
+            else
+                fscanf(file, " %[^\n]", salto);
+
+        }
+
+    free( estudiante_i.nombre);
+    free( estudiante_i.calif_promedio);
+    free(estudiante_i.E);
+
+    fclose(file);
+    fclose(f_temp);
+
+    remove(file_name);
+
+    if(rename(file_name_temp, file_name))
+        printf("\tEl estudiante no se pudo dar de baja %s\n", strerror(errno));
+    else
+    {
+        printf("\tEstudiante dado de baja\n");
+    tamanio--;
+    }
+
+
 
 }
