@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
             printf("\tAgregue el promedio: ");
             baja.calif_promedio = (char *)malloc(4 * sizeof(char));
             scanf(" %[^\n]", baja.calif_promedio);
-            printf("Agregue el edad: ");
+            printf("\tAgregue el edad: ");
             scanf("%d", &baja.edad);
             baja.E = (escuela *)malloc(sizeof(escuela));
             printf("\tAgregue el grupo: ");
