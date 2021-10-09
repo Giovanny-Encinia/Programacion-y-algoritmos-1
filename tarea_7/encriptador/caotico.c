@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <math.h>
 #ifndef ZERO
 #define ZERO 0
 #endif
@@ -11,6 +12,13 @@
 #ifndef TRANSFORMER
 #define TRANSFORMER 0xff
 #endif
+#define KEY1 456372
+#define KEY2 4372
+#define KEY3 56
+#define B 787
+#define M 5
+#define EPSILON 65395
+#define INICIO 44
 
 int tamanio_archivo_bits(char *name)
 {
@@ -63,7 +71,7 @@ unsigned int *leer_audio(char *name, int *tamanio)
         return NULL;
     }
 
-    data = (unsigned int *)malloc(*tamanio * sizeof(unsigned int));
+    data = (unsigned int * )malloc(*tamanio * sizeof(unsigned int));
 
     if (data == NULL)
     {
@@ -78,22 +86,11 @@ unsigned int *leer_audio(char *name, int *tamanio)
         return NULL;
     }
 
-    fread(data, sizeof(unsigned int), *tamanio, file);
+    fread(data, 2, *tamanio / 2, file);
 
     fclose(file);
 
     return data;
-}
-
-void caos(int *data)
-{
-    /*funcion que encripta un archivo de audio
-    utilizando mapas caoticos
-    
-    Parametros
-    ==========
-    int * data: es la informacion que se obtiene
-    al leer el archivo de audio*/
 }
 
 void guardar_audio(unsigned int *data, int tamanio, char *name)
@@ -130,7 +127,7 @@ unsigned int *split_bits(unsigned int number)
     unsigned int number: el numero al cual se le realizara el split*/
 
     int bytes, i;
-    unsigned int *b;
+    unsigned int *b, trans = TRANSFORMER;
 
     /*se comprueba el tamanio que asigna el compilador a los enteros
     sin signo*/
@@ -146,14 +143,83 @@ unsigned int *split_bits(unsigned int number)
     for (i = ZERO; i < bytes - ONE; i++)
     {
         /*TRANSFORMER = 0xff esto para obtener cada bloque*/
-        *(b + i) = number & TRANSFORMER;
+        *(b + i) = number & trans;
         number >>= 8;
     }
 
     return b;
 }
 
-void encriptar(char *name)
+void caos(unsigned int *data, int tamanio)
+{
+    /*funcion que encripta un archivo de audio
+    utilizando mapas caoticos
+    
+    Parametros
+    ==========
+    int * data: es la informacion que se obtiene
+    al leer el archivo de audio
+    int tamanio: es el tamanio en bits del archivo
+    de audio*/
+
+    int i, j;
+    unsigned int x, y, z, k1 = KEY1, k2 = KEY2;
+    unsigned int acopla, e = EPSILON;
+    unsigned int *b1, *b2, *b3, b = B, m = M, k3 = KEY3;
+
+    i = INICIO / 2;
+
+    /*recorre todo el archivo*/
+    while (i < tamanio / 2)
+    {
+        /*son las llaves de inicio*/
+        if (i == INICIO / 2)
+        {
+            x = k1;
+            y = k2;
+            z = k3;
+        }
+        else
+        {
+            acopla = e & (x ^ y ^ z);
+            x = b * x + (unsigned int)(x >> m) + acopla;
+            y = b * y + (unsigned int)(y >> m) + acopla;
+            z = b * z + (unsigned int)(z >> m) + acopla;
+        }
+
+        /*funcion que separa por bloques el numero
+        encontrado*/
+        b1 = split_bits(x);
+        b2 = split_bits(y);
+        b3 = split_bits(z);
+
+        /*aplica la transformacion a cada bit del archivo*/
+        for (j = ZERO; j < sizeof(unsigned int); j++)
+            *(data + j + i) ^= *(b1 + j);
+
+        /*los aumentos en i dependen del tamanio
+        de los enteros, pueden ser 4 u 8*/
+        i += j;
+
+        for (j = ZERO; j < sizeof(unsigned int); j++)
+            *(data + j + i) ^= *(b2 + j);
+
+        i += j;
+
+        for (j = ZERO; j < sizeof(unsigned int); j++)
+            *(data + j + i) ^= *(b3 + j);
+
+        i += j;
+
+        free(b1);
+        free(b2);
+        free(b3);
+        /*aqui ya ha terminado de aplicar el mapeo*/
+    }
+
+}
+
+void encriptar(char *name, char *name_save)
 {
     /*funcion que ordena leer un archivo de audio y despues
     aplica un mapeo caotico para encriptarlo, despues esto
@@ -164,19 +230,13 @@ void encriptar(char *name)
     char *name: es el nombre del archivo que se leera*/
 
     int tamanio, i;
-    unsigned int *data, *b;
+    unsigned int *data;
 
     data = leer_audio(name, &tamanio);
-    printf("El tamanio es: %d\n", tamanio);
-    printf("tamanio %lu\n", sizeof(int));
-
-    guardar_audio(data, tamanio, "resultados/test.wav");
-
-    b = split_bits(10448643);
-
-    for (i = ZERO; i < sizeof(unsigned int); i++)
-        printf("%u ", *(b + i));
+    /*Se aplica el mapeo caotico el cual encripta el audio*/
+    caos(data, tamanio);
+    /*se guarda en un archivo .wav el archivo encriptado*/
+    guardar_audio(data, tamanio, name_save);
 
     free(data);
-    free(b);
 }

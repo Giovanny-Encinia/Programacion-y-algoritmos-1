@@ -1,7 +1,9 @@
 #ifndef CAOTICOH
 #define CAOTICOH
-void encriptar(char *name);
-unsigned int *leer_audio(char *name, int *tamanio);
-int tamanio_archivo_bits(char *name);
-void guardar_audio(unsigned int *data, int tamanio, char *name);
+void encriptar(char *, char *);
+unsigned int *leer_audio(char *, int *);
+int tamanio_archivo_bits(char *);
+void guardar_audio(unsigned int *, int, char *);
+unsigned int *split_bits(unsigned int number);
+void caos(unsigned int *data, int tamanio);
 #endif
