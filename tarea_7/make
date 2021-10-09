@@ -1,0 +1,2 @@
+main: main.c encriptador/caotico.c
+    gcc main.c encriptador/caotico.c -o encripta
