@@ -5,12 +5,12 @@
 
 int main(void)
 {
-    int a[] = {9, 10, -6, 11, 3, 4, 5, 1, 7, -90};
+    int a[] = {9, -6};
     int i;
     ARBOL *arbol;
     arbol = crear_arbol();
 
-    for(i = 0; i < 10; i++)
+    for(i = 0; i < 2; i++)
     {
         insertar_nodo(arbol, a[i]);
     }
@@ -20,6 +20,9 @@ int main(void)
     
     printf("prof %d\n", calcula_profundidad(arbol));
     eliminar_nodo(arbol, 9);
+    
+    if(arbol->tronco == NULL)
+        printf("funcio\n");
     
     eliminar_arbol(arbol);
 
