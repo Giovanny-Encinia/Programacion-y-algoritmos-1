@@ -82,7 +82,7 @@ void imprimir_arbol(NODO *subarbol)
         /*terminaste de imprimir a la izquierda
         ahora imprime el nodo que es raiz en el subarbol*/
         printf("%d ", subarbol->dato);
-        
+
         /*ahora navega por el subarbol asociado
         por el nodo de la derecha*/
         if (subarbol->der != NULL)
@@ -102,29 +102,32 @@ void eliminar_ramas(NODO *subarbol)
 
     /*primero que se elimina lo que esta mas a la
     izquierda*/
+
     if (subarbol->izq == NULL)
     {
-        printf("%d ", subarbol->dato);
 
         /*revisa que este vacio a la derecha*/
         /*si no esta vacio entonces aplica la recursion*/
         if (subarbol->der != NULL)
-            imprimir_arbol(subarbol->der);
+            eliminar_ramas(subarbol->der);
 
-        
+        /*printf("%d ", subarbol->dato);*/
+        free(subarbol);
     }
     else
     {
         /*navega por el arbol, primero a la izquierda*/
-        imprimir_arbol(subarbol->izq);
-        imprimir_arbol(subarbol->der);
-        /*terminaste de liberar a la izquierda*/
+        eliminar_ramas(subarbol->izq);
+        /*terminaste de imprimir a la izquierda
+        ahora elimina el nodo que es raiz en el subarbol*/
+
         /*ahora navega por el subarbol asociado
         por el nodo de la derecha*/
-        printf("%d ", subarbol->dato);
-        /*libera ahora los nodos que son raices de los
-        subarboles*/
-     
+        if (subarbol->der != NULL)
+            eliminar_ramas(subarbol->der);
+
+        /*printf("%d ", subarbol->dato);*/
+        free(subarbol);
     }
 }
 
