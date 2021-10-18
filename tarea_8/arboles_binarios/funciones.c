@@ -256,12 +256,15 @@ void eliminar_nodo(ARBOL *arbol, int number)
     int number: es la informacion que contiene el nodo
     que sera eliminado*/
 
-    NODO *subarbol, *nodo_temp, *abuelo;
+    NODO *subarbol, *nodo_temp, *abuelo, *nodo_salvado;
     NODO *nodo_obj, *padre_minimo, *minimo;
     int dir;
     
     if(arbol->tamanio == ONE)
+    {
         arbol->tronco = NULL;
+        printf("Se ha eliminado el nodo con exito\n");
+    }
     else
     {
         /*subarbol contiene un subarbol, cuya raiz es el padre
@@ -272,6 +275,12 @@ void eliminar_nodo(ARBOL *arbol, int number)
             subarbol = arbol->tronco;
             nodo_obj = subarbol;
 
+            /*las direcciones se usan para los dos 
+            primeros casos*/
+            if(arbol->tronco->der != NULL)
+                dir = ONE;
+            else
+                dir = ZERO;
         }
         else
         {
@@ -285,22 +294,45 @@ void eliminar_nodo(ARBOL *arbol, int number)
             }
             else
             {
-                if(subarbol->der->dato == number)
+
+                if(subarbol->der != NULL && subarbol->izq == NULL)
                 {
                     nodo_obj = subarbol->der;
-                    /*la direccion del elemento con respecto
-                    al nodo padre*/
                     dir = ONE;
                 }
                 else
                 {
-                    nodo_obj = subarbol->izq;
-                    /*direccion*/
-                    dir = ZERO;
+                
+                    if(subarbol->der == NULL && subarbol->izq != NULL)
+                    {
+                        nodo_obj = subarbol->izq;
+                        dir = ZERO;
+                    }
+                    else
+                    {
+
+                        if (subarbol->der->dato == number)
+                        {
+                            nodo_obj = subarbol->der;
+                            /*la direccion del elemento con respecto
+                            al nodo padre*/
+                            dir = ONE;
+                        }
+                        else
+                        {
+                            nodo_obj = subarbol->izq;
+                            /*direccion*/
+                            dir = ZERO;
+                        }
+
+                    }
+
                 }
+
             }
+
         }
-        
+
         /*Caso en el que el nodo a elimimar es una hoja 
         dos NULL*/
         if(nodo_obj->der == NULL && nodo_obj->izq == NULL)
@@ -314,41 +346,71 @@ void eliminar_nodo(ARBOL *arbol, int number)
             /*se libera el espacio dinamico*/
             free(nodo_obj);
             nodo_obj = NULL;
-
+            
+            printf("Se ha eliminado el nodo con exito\n");
         }
         else
         {
             /*cuando se tiene solo un hijo diferente de NULL*/
             if (nodo_obj->der == NULL || nodo_obj->izq == NULL)
             {
-                /*revisamos donde esta la direccion*/
-                /*derecha*/
-                if(dir == ONE)
+                /*el caso en que el nodo que se elimina, es el nodo raiz*/
+                if(nodo_obj->dato == number)
                 {
-                    /*revisamos que hijo no es NULL
-                    y lo guardamos*/
-                    if(nodo_obj->der != NULL)
-                        nodo_temp = nodo_obj->der;
+                    
+                    if(dir == ONE)
+                    {
+                        /*primero se guarda el nodo raiz, que es
+                        el que se eliminara*/
+                        nodo_salvado = nodo_obj;
+                        free(nodo_obj);
+                        nodo_obj = NULL;
+                        arbol->tronco = nodo_salvado->der;
+                        
+                    }
                     else
-                        nodo_temp = nodo_obj->izq;
+                    {
+                        /*se guarda el nodo raiz que se eliminara despues*/
+                        nodo_salvado = nodo_obj;
+                        free(nodo_obj);
+                        nodo_obj = NULL;
+                        arbol->tronco = nodo_salvado->izq;
+                    }
 
-                    subarbol->der = nodo_temp;
+                    
                 }
-                /*izquierda*/
                 else
                 {
-                    if (nodo_obj->izq != NULL)
-                        nodo_temp = nodo_obj->der;
+                    /*revisamos donde esta la direccion*/
+                    /*derecha*/
+                    if(dir == ONE)
+                    {
+                        /*revisamos que hijo no es NULL
+                        y lo guardamos*/
+                        if(nodo_obj->der != NULL)
+                            nodo_temp = nodo_obj->der;
+                        else
+                            nodo_temp = nodo_obj->izq;
+
+                        subarbol->der = nodo_temp;
+                    }
+                    /*izquierda*/
                     else
-                        nodo_temp = nodo_obj->izq;
+                    {
+                        if (nodo_obj->izq != NULL)
+                            nodo_temp = nodo_obj->der;
+                        else
+                            nodo_temp = nodo_obj->izq;
 
-                    subarbol->izq = nodo_temp;
+                        subarbol->izq = nodo_temp;
+                    }
+
+                    /*se libera la memoria del nodo que se elimina*/
+                    free(nodo_obj);
+                    nodo_obj = NULL;
+
+                    printf("Se ha eliminado el nodo con exito\n");
                 }
-
-                /*se libera la memoria del nodo que se elimina*/
-                free(nodo_obj);
-                nodo_obj = NULL;
-
             }
             /*cuando los dos hijos son distintos de NULL*/
             else
@@ -370,6 +432,9 @@ void eliminar_nodo(ARBOL *arbol, int number)
             }
 
         }
+
     }
-    printf("Se ha eliminado el nodo con exito\n");
+
+    
+
 }
