@@ -65,32 +65,41 @@ void imprimir_arbol(NODO *subarbol)
     NODO *subarbol: se inicia entregando el tronco de 
     la estructura ARBOL*/
 
-    /*primero imprime lo que esta mas a la
-    izquierda*/
-    
-    if(subarbol->izq == NULL)
+    if(subarbol == NULL)
     {
-        printf("%d ", subarbol->dato);
-
-        /*revisa que este vacio a la derecha*/
-        /*si no esta vacio entonces aplica la recursion*/
-        if(subarbol->der != NULL)
-            imprimir_arbol(subarbol->der);
-
+        printf("Vacio\n");
     }
+    /*arbol no esta vacio*/
     else
     {
-        /*navega por el arbol, primero a la izquierda*/
-        imprimir_arbol(subarbol->izq);
-        /*terminaste de imprimir a la izquierda
-        ahora imprime el nodo que es raiz en el subarbol*/
-        printf("%d ", subarbol->dato);
 
-        /*ahora navega por el subarbol asociado
-        por el nodo de la derecha*/
-        if (subarbol->der != NULL)
-            imprimir_arbol(subarbol->der);
-    }
+        /*primero imprime lo que esta mas a la
+        izquierda*/
+        if(subarbol->izq == NULL)
+        {
+            printf("%d ", subarbol->dato);
+
+            /*revisa que este vacio a la derecha*/
+            /*si no esta vacio entonces aplica la recursion*/
+            if(subarbol->der != NULL)
+                imprimir_arbol(subarbol->der);
+
+        }
+        else
+        {
+            /*navega por el arbol, primero a la izquierda*/
+            imprimir_arbol(subarbol->izq);
+            /*terminaste de imprimir a la izquierda
+            ahora imprime el nodo que es raiz en el subarbol*/
+            printf("%d ", subarbol->dato);
+
+            /*ahora navega por el subarbol asociado
+            por el nodo de la derecha*/
+            if (subarbol->der != NULL)
+                imprimir_arbol(subarbol->der);
+        }
+
+    }/*end else el arbol no esta vacio*/
 
 }
 
@@ -139,14 +148,12 @@ void eliminar_arbol(ARBOL *arbol)
     /*Funcion que elimina toda la estructura de
     arbol*/
 
-    if(arbol->tronco == NULL)
-        printf("Arbol vacio\n");
-    else
-    {
+    if(arbol->tronco != NULL)
         eliminar_ramas(arbol->tronco);
-        free(arbol);
-        printf("El arbol ha sido eliminado\n");
-    }
+
+    free(arbol);
+    printf("El arbol ha sido eliminado\n");
+
 }
 
 int profundidad(NODO *tronco)
@@ -268,7 +275,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
     NODO *nodo_obj, *padre_minimo, *minimo;
     int dir;
     
-    if(arbol->tamanio == ONE)
+    if(arbol->tamanio == ONE && number == arbol->tronco->dato)
     {
         arbol->tronco = NULL;
         printf("Se ha eliminado el nodo con exito\n");
