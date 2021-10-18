@@ -1,9 +1,11 @@
 #include <stdlib.h>
 #include "arboles_binarios.h"
 #include <stdio.h>
-#include <limits.h>
 #ifndef ONE
 #define ONE 1
+#endif
+#ifndef ZERO
+#define ZERO 0
 #endif
 
 void inserta_recursivo(NODO *tronco, int number)
@@ -139,4 +141,41 @@ void eliminar_arbol(ARBOL *arbol)
     eliminar_ramas(arbol->tronco);
     free(arbol);
     printf("El arbol ha sido eliminado\n");
+}
+
+int profundidad(NODO *tronco)
+{
+    /*Funcion que calcula la profundidad de un arbol
+    de manera recursiva
+    Parametros
+    ===========
+    NODO *tronco: es el tronco de la structura arbol al inicio,
+    este pasa a ser la raiz de los subarboles*/
+
+    int a = ZERO, b = ZERO;
+
+    if(tronco == NULL)
+        return ZERO;
+
+    a = profundidad(tronco->izq);
+    b = profundidad(tronco->der);
+
+    if (a > b)
+        return a + ONE;
+    else
+        return b + ONE;
+
+}
+
+int calcula_profundidad(ARBOL *arbol)
+{
+    /*Funcion que engloba a la que busca la profudidad
+    solo se usa como mediadora para dar directamente
+    la estructura como arbol*/
+    return profundidad(arbol->tronco);
+}
+
+void eliminar_nodo(NODO *tronco, int dato)
+{
+
 }
