@@ -295,7 +295,8 @@ void eliminar_nodo(ARBOL *arbol, int number)
             subarbol = buscar_nodo(arbol->tronco, number);
             /*es necesario de nuevo buscar entre los dos nodos
             hijos que valor es el que buscamos, si es nulo entonces
-            no hay nada que eliminar, pero se omprime en terminal*/
+            no hay nada que eliminar, pero se imprime en terminal, que
+            no se encuentra, y mas adelante en un condicional termina la funcion*/
             if(subarbol == NULL)
             {
                 printf("No se encuentra el nodo que se desea eliminar\n");
@@ -335,11 +336,12 @@ void eliminar_nodo(ARBOL *arbol, int number)
 
                     }
 
-                }
+                }/*end else dar direccion hacia donde esta el elemento a eliminar*/
 
-            }
+            }/*end else cinicializa elementos de busqueda cuando existe el elemnto a 
+            eliminar*/
 
-        }
+        }/*end else el elemnto no se encuentra en la raiz del arbol*/
 
         /*solo se activa si existe el valor a eliminar*/
         if(subarbol != NULL)
@@ -450,6 +452,6 @@ void eliminar_nodo(ARBOL *arbol, int number)
 
         }/*end if cuando existe elemento a eliminar*/
 
-    }/*end else cuando se alimina un elemento de un arbol no vacio*/
+    }/*end else cuando se elimina un elemento de un arbol no vacio*/
 
-}
+}/*end function eliminar_nodo()*/
