@@ -1,8 +1,0 @@
-Jaime Jaiminguez,B+,39,C,V
-Ramiro Zepeda,A+,15,D,V
-Giselle Benardi jamin,C+,18,A,M
-Benardi jamin,B-,18,A,M
-B Arely martinez,C-,29,A,M
-Arely,A-,22,A,M
-Zaira Arely Trejo,B+,23,A,M
-Carlos Giovanny Encinia,A,25,A,M
