@@ -19,6 +19,8 @@ int main(void)
     printf("\n");
     
     printf("prof %d\n", calcula_profundidad(arbol));
+    eliminar_nodo(arbol, 1);
+    imprimir_arbol(arbol->tronco);
     eliminar_arbol(arbol);
 
     return 0;
