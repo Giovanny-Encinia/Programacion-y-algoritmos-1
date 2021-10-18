@@ -223,7 +223,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
     int number: es la informacion que contiene el nodo
     que sera eliminado*/
 
-    NODO *subarbol;
+    NODO *subarbol, *nodo_temp;
     NODO *nodo_obj;
     int dir;
 
@@ -273,6 +273,33 @@ void eliminar_nodo(ARBOL *arbol, int number)
         /*cuando se tiene solo un hijo diferente de NULL*/
         if (nodo_obj->der == NULL || nodo_obj->izq == NULL)
         {
+            /*revisamos donde esta la direccion*/
+            /*derecha*/
+            if(dir == ONE)
+            {
+                /*revisamos que hijo no es NULL
+                y lo guardamos*/
+                if(nodo_obj->der != NULL)
+                    nodo_temp = nodo_obj->der;
+                else
+                    nodo_temp = nodo_obj->izq;
+
+                subarbol->der = nodo_temp;
+            }
+            /*izquierda*/
+            else
+            {
+                if (nodo_obj->izq != NULL)
+                    nodo_temp = nodo_obj->der;
+                else
+                    nodo_temp = nodo_obj->izq;
+
+                subarbol->izq = nodo_temp;
+            }
+
+            /*se libera la memoria del nodo que se elimina*/
+            free(nodo_obj);
+            nodo_obj = NULL;
 
         }
         /*cuando los dos hijos son distintos de NULL*/
