@@ -211,6 +211,33 @@ NODO *buscar_nodo(NODO *tronco, int number)
     return temp;
 }
 
+NODO *encontrar_minimo(NODO *tronco)
+{
+    /*Funcion que encuentra el nodo con el dato
+    con valor minimo
+    Parametros
+    ==========
+    NODO *tronco: es la raiz del arbol, o subarbol
+    
+    Return
+    =======
+    NODO *nodo: el nodo padre que tiene a su izquierda el
+    nodo con valor minimo*/
+
+    /*El nodo mas a la izquierda es el que tiene menor valor*/
+
+    NODO *temp = tronco;
+
+    while (tronco->izq != NULL)
+    {
+        temp = tronco;
+        tronco = tronco->izq;   
+    }
+
+    return temp;
+    
+}
+
 void eliminar_nodo(ARBOL *arbol, int number)
 {
     /*Funcion que elimina un nodo del arbol,
@@ -223,40 +250,50 @@ void eliminar_nodo(ARBOL *arbol, int number)
     int number: es la informacion que contiene el nodo
     que sera eliminado*/
 
-    NODO *subarbol, *nodo_temp;
-    NODO *nodo_obj;
+    NODO *subarbol, *nodo_temp, *abuelo;
+    NODO *nodo_obj, *padre_minimo, *minimo;
     int dir;
-
-    /*subarbol contiene un subarbol, cuya raiz es el padre
-    del nodo que se quiere eliminar*/
-    subarbol = buscar_nodo(arbol->tronco, number);
     
-    /*es necesario de nuevo buscar entre los dos nodos
-    hijos que valor es el que buscamos, si es nulo entonces
-    no hay nada que eliminar, pero se omprime en terminal*/
-    if(subarbol == NULL)
+    /*subarbol contiene un subarbol, cuya raiz es el padre
+    del nodo que se quiere eliminar, a menos que el tronco
+    sea el nodo que se debe de eliminar*/
+    if(arbol->tronco->dato == number)
     {
-        printf("No se encuentra el nodo que se desea eliminar\n");
+        subarbol = arbol->tronco;
+        nodo_obj = subarbol;
+
     }
     else
     {
-        if(subarbol->der->dato == number)
+        subarbol = buscar_nodo(arbol->tronco, number);
+    
+        /*es necesario de nuevo buscar entre los dos nodos
+        hijos que valor es el que buscamos, si es nulo entonces
+        no hay nada que eliminar, pero se omprime en terminal*/
+        if(subarbol == NULL)
         {
-            nodo_obj = subarbol->der;
-            /*la direccion del elemento con respecto
-            al nodo padre*/
-            dir = ONE;
-
+            printf("No se encuentra el nodo que se desea eliminar\n");
         }
-         else
-         {
-            nodo_obj = subarbol->izq;
-            /*direccion*/
-            dir = ZERO;
-         }
+        else
+        {
+            if(subarbol->der->dato == number)
+            {
+                nodo_obj = subarbol->der;
+                /*la direccion del elemento con respecto
+                al nodo padre*/
+                dir = ONE;
+            }
+            else
+            {
+                nodo_obj = subarbol->izq;
+                /*direccion*/
+                dir = ZERO;
+            }
+        }
     }
-
-    /*Caso en el que el nodo a elimimar es una hoja*/
+    
+    /*Caso en el que el nodo a elimimar es una hoja 
+    dos NULL*/
     if(nodo_obj->der == NULL && nodo_obj->izq == NULL)
     {
         if(dir == ONE)
@@ -305,11 +342,28 @@ void eliminar_nodo(ARBOL *arbol, int number)
         /*cuando los dos hijos son distintos de NULL*/
         else
         {
+            /*se encuentra el subarbol a la derecha del nodo a eliminar*/
+            padre_minimo = encontrar_minimo(nodo_obj->der);
 
+            /*no existe un nodo menor mas que el padre*/
+            if(padre_minimo->izq == NULL)
+            {
+                minimo = padre_minimo;
+                eliminar_nodo(arbol, minimo->dato);
+                nodo_temp = padre_minimo->der;
+                nodo_obj->dato = minimo->dato;
+            }
+            else
+            /*el nodo a la izquierda es menor que el nodo padre*/
+                minimo = padre_minimo->izq;
+            
+            imprimir_arbol(arbol->tronco);
+            printf("minimo padre: %d\n", padre_minimo->dato);
+            
+            
         }
 
     }
 
-    imprimir_arbol(subarbol);
-    printf("\n");
+    printf("Se ha eliminado el nodo con exito\n");
 }
