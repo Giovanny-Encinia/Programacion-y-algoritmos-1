@@ -10,6 +10,7 @@ typedef struct HASH
     int tamanio;
     ARBOL **datos;
 }HASH;
+void llenar_tabla_random(HASH *tabla);
 void imprimir_tabla(HASH *tabla);
 void imprime_arbol_deeper(HASH *tabla);
 HASH *crear_tabla(char *name, int tamanio);

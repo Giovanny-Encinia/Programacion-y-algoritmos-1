@@ -53,7 +53,7 @@ void insertar_nodo(ARBOL *arbolito, int number)
         inserta_recursivo(arbolito->tronco, number);
 
     arbolito->tamanio += 1;
-    printf("Se ha creado un nuevo nodo\n");
+    /*printf("Se ha creado un nuevo nodo\n");*/
     
 }
 
@@ -152,7 +152,7 @@ void eliminar_arbol(ARBOL *arbol)
         eliminar_ramas(arbol->tronco);
 
     free(arbol);
-    printf("El arbol ha sido eliminado\n");
+    /*printf("El arbol ha sido eliminado\n");*/
 
 }
 

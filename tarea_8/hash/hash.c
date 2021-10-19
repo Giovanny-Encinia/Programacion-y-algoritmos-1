@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <errno.h>
+#include <time.h>
 #include "hash.h"
 #include "../arboles_binarios/funciones.h"
 #define FUNCTION(a, b) ((a)%(b))
@@ -97,6 +98,7 @@ void imprimir_tabla(HASH *tabla)
     {
         printf("INDEX: %5d|\t", i);
         imprimir_arbol(tabla->datos[i]->tronco);
+        printf("\n");
     }
 
     printf("\n======================================================");
@@ -110,7 +112,7 @@ void imprime_arbol_deeper(HASH *tabla)
     Parametros
     ===========
     HASH *tabla: es la tabla de donde se buscara el arbol*/
-    
+
     int i, maxi, index;
 
     /*Calcula la profundidad de cada arbol*/
@@ -134,10 +136,26 @@ void imprime_arbol_deeper(HASH *tabla)
     printf("\n======================================================");
     printf("======================================================\n");
     printf("El arbol mas profundo:\n");
-    printf("Profundidad: %d\n", tabla->datos[i]->profundidad);
-    printf("INDEX: %8d|\t", i);
-    imprimir_arbol(tabla->datos[i]->tronco);
+    printf("Profundidad: %d\n", tabla->datos[index]->profundidad);
+    printf("INDEX: %8d|\t", index);
+    imprimir_arbol(tabla->datos[index]->tronco);
     printf("\n======================================================");
     printf("======================================================\n");
+
+}
+
+void llenar_tabla_random(HASH *tabla)
+{
+    /*Funcion que genera numeros aleatoriamente y 
+    los agrega a la tabla hash*/
+    int number, i;
+    srand(time(NULL));
+
+    for(i = ZERO; i < 50; i++)
+    {
+        /*se llena con numeros del 0 al 199*/
+        number = rand()%200;
+        agregar_elemento_tabla(tabla, number);
+    }
 
 }
