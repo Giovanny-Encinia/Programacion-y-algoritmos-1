@@ -278,6 +278,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
     if(arbol->tamanio == ONE && number == arbol->tronco->dato)
     {
         arbol->tronco = NULL;
+        arbol->tamanio -= ONE;
         printf("Se ha eliminado el nodo con exito\n");
     }
     else
@@ -366,7 +367,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
                 /*se libera el espacio dinamico*/
                 free(nodo_obj);
                 nodo_obj = NULL;
-                
+                arbol->tamanio -= ONE;
                 printf("Se ha eliminado el nodo con exito\n");
             }/*end if caso 1*/
             else
@@ -430,7 +431,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
                         /*se libera la memoria del nodo que se elimina*/
                         free(nodo_obj);
                         nodo_obj = NULL;
-
+                        arbol->tamanio -= ONE;
                         printf("Se ha eliminado el nodo con exito\n");
                     }/*end else cuando existe un hijo distinto de NULL y el elemento a 
                     eliminar no es la raiz*/

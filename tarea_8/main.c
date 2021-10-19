@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "arboles_binarios/arboles_binarios.h"
-#include "arboles_binarios/funciones.h"
+#include "hash/hash.h"
 
 int main(void)
-{
+{/*
     int a[] = {9, 10, 11, 12, 13};
     int i;
     ARBOL *arbol;
@@ -19,13 +18,13 @@ int main(void)
     printf("\n");
     
     printf("profundidad %d\n", calcula_profundidad(arbol));
-    eliminar_nodo(arbol, -9);
+    eliminar_nodo(arbol, 9);
     
 
     imprimir_arbol(arbol->tronco);
 
     
-    eliminar_arbol(arbol);
+    eliminar_arbol(arbol);*/
 
     return 0;
 }
