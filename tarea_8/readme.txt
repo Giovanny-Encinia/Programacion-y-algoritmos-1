@@ -6,6 +6,10 @@ Para correr el programa se necesita hacer
     make run
 Para eliminar el ejecutable se debe de usar:
     make clean
+
+Si el make no llega a funcionar, utilice
+gcc -o tarea8 main.c arboles_binarios/arboles_binarios.c arboles_binarios/funciones.c
+
 -------------------------------------------------------------------
 
 Sobre el programa:
