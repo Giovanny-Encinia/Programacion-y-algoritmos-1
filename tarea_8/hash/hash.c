@@ -151,7 +151,7 @@ void llenar_tabla_random(HASH *tabla)
     int number, i;
     srand(time(NULL));
 
-    for(i = ZERO; i < 50; i++)
+    for(i = ZERO; i < 15; i++)
     {
         /*se llena con numeros del 0 al 199*/
         number = rand()%200;

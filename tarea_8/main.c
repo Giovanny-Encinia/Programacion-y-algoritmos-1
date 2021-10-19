@@ -1,16 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "hash/hash.h"
+#include "arboles_binarios/arboles_binarios.h"
+#include "arboles_binarios/funciones.h"
 #define SIZE 11
 
 int main(void)
-{/*
-    int a[] = {9, 10, 11, 12, 13};
+{
+    int a[] = {190, 146};
     int i;
     ARBOL *arbol;
     arbol = crear_arbol();
 
-    for(i = 0; i < 5; i++)
+    for(i = 0; i < 2; i++)
     {
         insertar_nodo(arbol, a[i]);
     }
@@ -19,24 +21,24 @@ int main(void)
     printf("\n");
     
     printf("profundidad %d\n", calcula_profundidad(arbol));
-    eliminar_nodo(arbol, 9);
+    eliminar_nodo(arbol, 190);
+    
     
 
     imprimir_arbol(arbol->tronco);
-
     
-    eliminar_arbol(arbol);*/
+    eliminar_arbol(arbol);
 
-
+    /*
     HASH *tabla;
     char selection;
-    int number, condition = 1;
+    int number, condition = 1;*/
 
     /*se crea la estructura general de la tabla*/
-    tabla = crear_tabla("tarea8", SIZE);
+    /*tabla = crear_tabla("tarea8", SIZE);*/
     /*para fines de la tarea, de da un tabla que ya
     contiene 100 elementos*/
-    llenar_tabla_random(tabla);
+   /* llenar_tabla_random(tabla);
 
     while (condition)
     {
@@ -62,20 +64,26 @@ int main(void)
             imprime_arbol_deeper(tabla);
             break;
         case '3':
+            printf("Ingresa el numero que deseas eliminar: ");
+            scanf(" %d", &number);
             eliminar_elemento_tabla(tabla, number);
+            printf("\n");
             break;
         case '4':
+            printf("Ingresa el numero que deseas agregar: ");
+            scanf(" %d", &number);
             agregar_elemento_tabla(tabla, number);
+            printf("\n");
             break;
         default:
-            printf("Adios\n");
+            printf("\tAdios\n");
             condition = ZERO;
             break;
         }
 
     }
 
-    eliminar_tabla(tabla);
+    eliminar_tabla(tabla);*/
 
     return 0;
 }

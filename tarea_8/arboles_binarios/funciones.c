@@ -67,7 +67,7 @@ void imprimir_arbol(NODO *subarbol)
 
     if(subarbol == NULL)
     {
-        printf("Vacio\n");
+        printf("Vacio ");
     }
     /*arbol no esta vacio*/
     else
@@ -311,7 +311,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
             }
             else
             {
-
+                /*existe un nulo en alguno de los hijos*/
                 if(subarbol->der != NULL && subarbol->izq == NULL)
                 {
                     nodo_obj = subarbol->der;
@@ -319,15 +319,19 @@ void eliminar_nodo(ARBOL *arbol, int number)
                 }
                 else
                 {
-                
+                    
+                    /*existe un nulo en alguno de los hijos*/
                     if(subarbol->der == NULL && subarbol->izq != NULL)
-                    {
+                    {   
                         nodo_obj = subarbol->izq;
                         dir = ZERO;
                     }
                     else
                     {
 
+                        /*los hijos no son nulos*/
+                        /*revisa la direccion en la que se encuentra 
+                        el valor a eliminar*/
                         if (subarbol->der->dato == number)
                         {
                             nodo_obj = subarbol->der;
@@ -377,6 +381,7 @@ void eliminar_nodo(ARBOL *arbol, int number)
                 if (nodo_obj->der == NULL || nodo_obj->izq == NULL)
                 {
                     
+                    
                     /*el caso en que el nodo que se elimina, es el nodo raiz*/
                     if(subarbol->dato == number)
                     {
@@ -404,29 +409,21 @@ void eliminar_nodo(ARBOL *arbol, int number)
                     }/*end if elimina raiz que contiene un hijo distinto de NULL*/
                     else
                     {
-                        /*revisamos donde esta la direccion*/
+                        /*revisamos donde esta la direccion con no nulo
+                        respecto al nodo a eliminar*/
                         /*derecha*/
-                        if(dir == ONE)
-                        {
-                            /*revisamos que hijo no es NULL
-                            y lo guardamos*/
-                            if(nodo_obj->der != NULL)
-                                nodo_temp = nodo_obj->der;
-                            else
-                                nodo_temp = nodo_obj->izq;
-
-                            subarbol->der = nodo_temp;
-                        }
+                        if(nodo_obj->der != NULL)
+                            nodo_temp = nodo_obj->der;
                         /*izquierda*/
                         else
-                        {
-                            if (nodo_obj->izq != NULL)
-                                nodo_temp = nodo_obj->der;
-                            else
-                                nodo_temp = nodo_obj->izq;
+                            nodo_temp = nodo_obj->izq;
 
+                        /*hace la nueva conexion con respecto 
+                        al padre del nodo que se elimino*/
+                        if(dir == ONE)
+                            subarbol->der = nodo_temp;
+                        else
                             subarbol->izq = nodo_temp;
-                        }
 
                         /*se libera la memoria del nodo que se elimina*/
                         free(nodo_obj);
