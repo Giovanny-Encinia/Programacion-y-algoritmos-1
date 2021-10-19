@@ -1,10 +1,12 @@
-Sobre la ejecucion:
+Sobre la compilacion, ejecucion y eliminacion del programa:
 
-El programa se puede ejecutar simplemente haciendo
-make
-en terminal, este genera un ejecutable llamado
-tarea8
-entonces se debe de ejecutar ./tarea8
+El programa se puede compilar simplemente haciendo
+    make
+Para correr el programa se necesita hacer
+    make run
+Para eliminar el ejecutable se debe de usar:
+    make clean
+-------------------------------------------------------------------
 
 Sobre el programa:
 
