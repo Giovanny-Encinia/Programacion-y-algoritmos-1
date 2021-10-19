@@ -89,20 +89,25 @@ void imprimir_tabla(HASH *tabla)
     HASH *tabla: es la tabla hash que se va a imprimir*/
 
     int i;
-
-    printf("%16s\n", tabla->name);
-    printf("======================================================");
-    printf("======================================================\n");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
+    printf("|%50s%57s\n", tabla->name, "|");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
+    printf("|%8s|%10s|%37s%50s\n", "INDEX", "TAMANIO", "ELEMENTOS", "|");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
 
     for(i = ZERO; i < tabla->tamanio; i++)
     {
-        printf("INDEX: %5d|\t", i);
+        printf("|%8d|%10d|\t", i, tabla->datos[i]->tamanio);
         imprimir_arbol(tabla->datos[i]->tronco);
         printf("\n");
     }
 
-    printf("\n======================================================");
-    printf("======================================================\n");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n\n");
+
 }
 
 void imprime_arbol_deeper(HASH *tabla)
@@ -133,15 +138,19 @@ void imprime_arbol_deeper(HASH *tabla)
 
     }
 
-    printf("\n======================================================");
-    printf("======================================================\n");
-    printf("El arbol mas profundo:\n");
-    printf("Profundidad: %d\n", tabla->datos[index]->profundidad);
-    printf("INDEX: %8d|\t", index);
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
+    printf("|%50s%57s\n", "Arbol mas profundo", "|");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
+    printf("|%8s|%8s|%12s|%19s%57s\n", "INDEX", "TAMANIO","PROFUNDIDAD", "ELEMENTOS", "|");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n");
+    printf("|%8d|%8d|%12d| ", index, tabla->tamanio,tabla->datos[index]->profundidad);
     imprimir_arbol(tabla->datos[index]->tronco);
-    printf("\n======================================================");
-    printf("======================================================\n");
-
+    printf("\n");
+    printf("+-----------------------------------------------------");
+    printf("-----------------------------------------------------+\n\n");
 }
 
 void llenar_tabla_random(HASH *tabla)
@@ -151,7 +160,7 @@ void llenar_tabla_random(HASH *tabla)
     int number, i;
     srand(time(NULL));
 
-    for(i = ZERO; i < 15; i++)
+    for(i = ZERO; i < 30; i++)
     {
         /*se llena con numeros del 0 al 199*/
         number = rand()%200;
