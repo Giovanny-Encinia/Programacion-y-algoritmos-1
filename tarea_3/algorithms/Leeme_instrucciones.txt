@@ -1,0 +1,6 @@
+Tarea 3 Programacion y Algoritmos
+Carlos Giovanny Encinia Gonzalez
+
+
+Se debe usar codeblocks, se ejecuta de manera estandar,
+se usan libr3erias de la libreri estandar, stdio.h

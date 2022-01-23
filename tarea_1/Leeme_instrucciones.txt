@@ -1,0 +1,7 @@
+Tarea 1 Programacion y Algoritmos
+Carlos Giovanny Encinia Gonzalez
+
+
+Se debe abrir el archivo tarea_1_pa.cbp en codeblocks, despues se debe compilar y ejecutar el programa.
+
+Elejecutable le pedira ingresar dos fracciones, primero se le pedira una y despues la otra. Las fracciones son del tipo a/b, despues de ingresarlas, el programa muestra la suma de ambas fracciones y esl resultado.
